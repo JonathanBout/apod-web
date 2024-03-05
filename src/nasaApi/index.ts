@@ -8,9 +8,13 @@ export default {
     }
 
     const response = await fetch(url)
-    const data = await response.json()
+    const data = (await response.json()) as ApodResponse
 
-    return data as ApodResponse
+    if (data.copyright !== undefined) {
+      data.copyright = data.copyright.trim()
+    }
+
+    return data
   }
 }
 

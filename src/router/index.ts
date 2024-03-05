@@ -7,7 +7,13 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
+      redirect: new Date().toISOString().split('T')[0].replace('-', '/').replace('-', '/')
+    },
+    {
+      path: '/:year([0-9]{4})/:month([0-9]{2})/:day([0-9]{2})',
+      name: 'apod',
       component: HomeView
+	  
     }
   ]
 })
