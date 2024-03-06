@@ -53,11 +53,14 @@ api.getApod(date).then((r) => {
         <a :href="pathFromDate(addDays(date, -1))">Previous Day</a>
       </span>
       <span>
-        <input
-          type="date"
-          :value="date.toISOString().slice(0, 10)"
-          @input="(event) => navigateToDate(new Date(event.target!.value))"
-        />
+        <form>
+          <input
+            type="date"
+            :value="date.toISOString().slice(0, 10)"
+            @input="(event) => navigateToDate(new Date(event.target!.value))"
+          />
+          <button type="submit">Go</button>
+        </form>
       </span>
       <span>
         <a :href="pathFromDate(addDays(date, 1))">Next Day</a>
@@ -108,14 +111,19 @@ api.getApod(date).then((r) => {
   align-items: center;
 }
 
-.nav * + *,
-.data * + * {
+.nav > * + *,
+.data > * + * {
   &:before {
     content: '|';
     display: inline-block;
     margin-inline: 1ch;
     transform: translateY(-1px);
   }
+}
+
+.nav form {
+  display: inline-flex;
+  gap: 1ch;
 }
 
 .apod {
