@@ -6,6 +6,20 @@ import { useRoute, useRouter } from 'vue-router'
 const route = useRoute()
 const router = useRouter()
 
+const has_error = () => {
+  return response.value.code < 200 || response.value.code >= 300
+}
+
+const addDays = (date: Date, count: number) => {
+  const d = new Date(date)
+  d.setDate(d.getDate() + count)
+  return d
+}
+
+const pathFromDate = (date: Date) => {
+  return `/${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`
+}
+
 const year = parseInt(route.params.year as string)
 const month = parseInt(route.params.month as string)
 const day = parseInt(route.params.day as string)
@@ -18,27 +32,6 @@ date.setDate(day)
 let response = ref(new ApodResponse())
 let loading = ref(true)
 
-const has_error = () => {
-  return response.value.code < 200 || response.value.code >= 300
-}
-
-const addDays = (date: Date, count: number) => {
-  const d = new Date(date)
-  d.setDate(d.getDate() + count)
-  return d
-}
-
-const pathFromDate = (date: Date) => {
-  console.log('pathFromDate', date)
-  return `/${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`
-}
-
-const navigateToDate = (date: Date) => {
-  const newPath = pathFromDate(date)
-  router.replace({ path: newPath, force: true })
-  console.log('navigateToDate', newPath)
-}
-
 api.getApod(date).then((r) => {
   response.value = r
   loading.value = false
@@ -48,19 +41,12 @@ api.getApod(date).then((r) => {
 
 <template>
   <div class="apod">
-    <div class="nav">
+    <div class="nav separated">
       <span>
         <a :href="pathFromDate(addDays(date, -1))">Previous Day</a>
       </span>
       <span>
-        <form>
-          <input
-            type="date"
-            :value="date.toISOString().slice(0, 10)"
-            @input="(event) => navigateToDate(new Date(event.target!.value))"
-          />
-          <button type="submit">Go</button>
-        </form>
+        <a href="/picker">Pick a Date</a>
       </span>
       <span>
         <a :href="pathFromDate(addDays(date, 1))">Next Day</a>
@@ -75,7 +61,7 @@ api.getApod(date).then((r) => {
     </template>
     <template v-else>
       <h1>{{ response.title }}</h1>
-      <div class="data">
+      <div class="data separated">
         <span>Astronomy Picture Of the Day {{ new Date(response.date).toLocaleDateString() }}</span>
         <span class="left-bar" v-if="response.copyright">&copy; {{ response.copyright }}</span>
         <span class="left-bar" v-if="response.hdurl">
@@ -109,16 +95,6 @@ api.getApod(date).then((r) => {
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-
-.nav > * + *,
-.data > * + * {
-  &:before {
-    content: '|';
-    display: inline-block;
-    margin-inline: 1ch;
-    transform: translateY(-1px);
-  }
 }
 
 .nav form {

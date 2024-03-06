@@ -62,3 +62,30 @@ h6 {
   color: var(--color-heading);
   font-family: Inter;
 }
+
+button {
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.centered {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.monospace {
+  font-family: 'DM Mono';
+}
+
+.separated > * + * {
+  &:before {
+    content: '|';
+    display: inline-block;
+    margin-inline: 1ch;
+    transform: translateY(-1px);
+  }
+}

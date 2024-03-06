@@ -13,6 +13,15 @@ const router = createRouter({
       path: '/:year([0-9]{4})/:month([0-9]{1,2})/:day([0-9]{1,2})',
       name: 'apod',
       component: HomeView
+    },
+    {
+      path: '/picker',
+      name: 'picker',
+      component: () => import('@/views/DatePickerView.vue')
+    },
+    {
+      path: '/:catchAll(.*)',
+      component: import('@/views/NotFoundView.vue')
     }
   ]
 })
