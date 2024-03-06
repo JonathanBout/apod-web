@@ -1,28 +1,29 @@
 @import './base.less';
 
-#app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-
-  font-weight: normal;
+* {
+  text-wrap: pretty;
 }
 
-a,
-.green {
+a {
   text-decoration: none;
-  color: hsla(160, 100%, 37%, 1);
+  color: #e4002b;
+  font-weight: bold;
   transition: 0.4s;
 }
 
 @media (hover: hover) {
   a:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
+    background-color: #0032a0;
   }
 }
 
-@media (min-width: 1024px) {
-  #app {
-    padding: 0 2rem;
-  }
+.flex-filler {
+  flex: 1;
+}
+
+.copyright-notice {
+  font-size: 0.8em;
+  color: #666;
+  margin-top: 20px;
+  text-align: center;
 }

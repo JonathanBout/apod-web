@@ -27,4 +27,6 @@ export class ApodResponse {
   service_version: string = ''
   title: string = ''
   url: string = ''
+  code: number = 200
+  msg: string = ''
 }
