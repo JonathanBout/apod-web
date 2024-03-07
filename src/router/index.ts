@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '@/views/IndexView.vue'
 
 const formatDate = (date: Date) => {
-  return `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`
+  return `/${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`
 }
 
 const randomDate = () => {

@@ -57,10 +57,10 @@ watch(date, load)
   <div class="apod">
     <div class="nav separated">
       <span>
-        <a :href="pathFromDate(addDays(date, -1))">Previous Day</a>
+        <router-link :to="{ path: pathFromDate(addDays(date, -1)) }">Previous Day</router-link>
       </span>
       <span>
-        <a href="/random">Random</a>
+        <router-link to="/random">Random</router-link>
       </span>
       <span>
         <input
@@ -72,10 +72,10 @@ watch(date, load)
         />
       </span>
       <span>
-        <a href="/">Today</a>
+        <router-link to="/">Today</router-link>
       </span>
       <span>
-        <a :href="pathFromDate(addDays(date, 1))">Next Day</a>
+        <router-link :to="{ path: pathFromDate(addDays(date, 1)) }">Next Day</router-link>
       </span>
     </div>
     <template v-if="has_error()">
