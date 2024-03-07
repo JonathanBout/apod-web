@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import api, { ApodResponse } from '@/nasaApi'
+import { ref, watch } from 'vue'
+import { nasaApi as api, ApodResponse } from '@/nasaApi'
 import { useRoute, useRouter } from 'vue-router'
 
 const route = useRoute()
 const router = useRouter()
 
 const has_error = () => {
-  return response.value.code < 200 || response.value.code >= 300
+  return !!response.value.error || response.value.code < 200 || response.value.code >= 300
 }
 
 const addDays = (date: Date, count: number) => {
@@ -17,26 +17,40 @@ const addDays = (date: Date, count: number) => {
 }
 
 const pathFromDate = (date: Date) => {
+  if (date < new Date('1995-06-16')) {
+    return undefined
+  } else if (date > new Date()) {
+    return undefined
+  }
   return `/${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`
 }
 
-const year = parseInt(route.params.year as string)
-const month = parseInt(route.params.month as string)
-const day = parseInt(route.params.day as string)
+const load = async () => {
+  loading.value = true
+  if (
+    route.params.year != date.value.getFullYear().toString() ||
+    route.params.month != (date.value.getMonth() + 1).toString() ||
+    route.params.day != date.value.getDate().toString()
+  ) {
+    router.push(pathFromDate(date.value) ?? '/')
+  }
+  response.value = await api.getApod(date.value)
+  loading.value = false
+}
 
-const date = new Date()
-date.setFullYear(year)
-date.setMonth(month - 1)
-date.setDate(day)
-
+const date = ref(new Date())
 let response = ref(new ApodResponse())
 let loading = ref(true)
 
-api.getApod(date).then((r) => {
-  response.value = r
-  loading.value = false
-  route.meta.title = r.title
-})
+const { year, month, day } = route.params
+date.value.setFullYear(parseInt(year as string))
+date.value.setMonth(parseInt(month as string) - 1)
+date.value.setDate(parseInt(day as string))
+
+load()
+
+watch(() => route.params, load)
+watch(date, load)
 </script>
 
 <template>
@@ -46,14 +60,26 @@ api.getApod(date).then((r) => {
         <a :href="pathFromDate(addDays(date, -1))">Previous Day</a>
       </span>
       <span>
-        <a href="/picker">Pick a Date</a>
+        <a href="/random">Random</a>
+      </span>
+      <span>
+        <input
+          type="date"
+          min="1995-06-16"
+          :max="new Date().toISOString().slice(0, 10)"
+          :value="date.toISOString().slice(0, 10)"
+          @input="date = new Date(($event.target as any).value)"
+        />
+      </span>
+      <span>
+        <a href="/">Today</a>
       </span>
       <span>
         <a :href="pathFromDate(addDays(date, 1))">Next Day</a>
       </span>
     </div>
     <template v-if="has_error()">
-      <h1>Error</h1>
+      <h1>{{ response.title }}</h1>
       <p>{{ response.msg }}</p>
     </template>
     <template v-else-if="loading">
@@ -82,9 +108,9 @@ api.getApod(date).then((r) => {
           alt="NASA's Astronomy Picture of the Day"
           width="500px"
         />
-        <div class="explanation">
-          <p>{{ response.explanation }}</p>
-        </div>
+        <p class="explanation">
+          {{ response.explanation }}
+        </p>
       </div>
     </template>
   </div>
@@ -138,6 +164,7 @@ h1 {
 
   .explanation {
     line-height: 1.8em;
+    max-width: 80ch;
   }
 
   @media (max-width: 1000px) {
