@@ -27,13 +27,6 @@ const pathFromDate = (date: Date) => {
 
 const load = async () => {
   loading.value = true
-  if (
-    route.params.year != date.value.getFullYear().toString() ||
-    route.params.month != (date.value.getMonth() + 1).toString() ||
-    route.params.day != date.value.getDate().toString()
-  ) {
-    router.push(pathFromDate(date.value) ?? '/')
-  }
   response.value = await api.getApod(date.value)
   loading.value = false
 }
@@ -57,10 +50,10 @@ watch(date, load)
   <div class="apod">
     <div class="nav separated">
       <span>
-        <router-link :to="{ path: pathFromDate(addDays(date, -1)) }">Previous Day</router-link>
+        <a :href="pathFromDate(addDays(date, -1))">Previous Day</a>
       </span>
       <span>
-        <router-link to="/random">Random</router-link>
+        <a href="/random">Random</a>
       </span>
       <span>
         <input
@@ -72,10 +65,10 @@ watch(date, load)
         />
       </span>
       <span>
-        <router-link to="/">Today</router-link>
+        <a href="/">Today</a>
       </span>
       <span>
-        <router-link :to="{ path: pathFromDate(addDays(date, 1)) }">Next Day</router-link>
+        <a :href="pathFromDate(addDays(date, 1))">Next Day</a>
       </span>
     </div>
     <template v-if="has_error()">
