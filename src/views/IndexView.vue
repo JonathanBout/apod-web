@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import { nasaApi as api, ApodResponse } from '@/nasaApi'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 
 const route = useRoute()
-const router = useRouter()
 
 const has_error = () => {
   return !!response.value.error || response.value.code < 200 || response.value.code >= 300
@@ -28,7 +27,17 @@ const pathFromDate = (date: Date) => {
 const load = async () => {
   loading.value = true
   response.value = await api.getApod(date.value)
+  document.title = get_title()
   loading.value = false
+}
+
+const get_title = () => {
+  if (has_error()) {
+    return response.value.title
+  }
+  return `Astronomy Picture Of the Day ${new Date(response.value.date).toLocaleDateString()}. ${
+    response.value.title
+  }`
 }
 
 const date = ref(new Date())
@@ -132,7 +141,18 @@ h1 {
   text-align: center;
   top: 0;
   z-index: 1;
+  display: block;
+  width: 100%;
+}
+
+h1::before {
+  z-index: -1;
+  content: '';
+  position: absolute;
+  inset: 0;
   backdrop-filter: blur(10px);
+
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0) 100%);
 }
 
 .apod-container {
@@ -153,6 +173,7 @@ h1 {
   .media-image {
     width: 100%;
     max-height: 100%;
+    border: 1px solid black;
   }
 
   .explanation {

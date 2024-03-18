@@ -66,5 +66,9 @@ export class ApodResponse {
         response.explanation = matches.groups.explanation.trim()
       }
     }
+
+    if (!response.explanation.match(/\.;!\?/)) {
+      response.explanation += '.'
+    }
   }
 }
