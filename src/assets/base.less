@@ -4,25 +4,22 @@
 
 :root {
   --color-background: white;
-
-  --color-border: black;
-
   --color-heading: #333;
   --color-text: #555;
 
-  --section-gap: 160px;
+  --color-accent1: #ff244c;
+  --color-accent2: #c7d6f8;
 
   color-scheme: light;
 
   @media (prefers-color-scheme: dark) {
     color-scheme: dark;
     --color-background: #121212;
-
-    --color-border: #333;
-    --color-border-hover: #666;
-
     --color-heading: #ccc;
     --color-text: #aaa;
+
+    --color-accent1: #f36363;
+    --color-accent2: #2e3a55;
   }
 }
 
@@ -33,6 +30,7 @@
   margin: 0;
   position: relative;
   font-weight: normal;
+  accent-color: var(--color-accent1);
 }
 
 #app {
