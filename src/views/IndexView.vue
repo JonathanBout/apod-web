@@ -103,13 +103,14 @@ watch(date, load)
           :src="response.url"
           frameborder="0"
         ></iframe>
-        <img
-          v-else
-          class="media media-image"
-          :src="response.url"
-          alt="NASA's Astronomy Picture of the Day"
-          width="500px"
-        />
+        <a v-else target="_blank" class="image-open" :href="response.url">
+          <img
+            class="media media-image"
+            :src="response.url"
+            alt="NASA's Astronomy Picture of the Day"
+            width="500px"
+          />
+        </a>
         <p class="explanation">
           {{ response.explanation }}
         </p>
@@ -133,6 +134,31 @@ watch(date, load)
 .apod {
   position: relative;
   inset: 0;
+}
+
+.image-open {
+  height: fit-content;
+  display: block;
+  margin: 0;
+  margin-bottom: 7px;
+  padding: 0;
+  &::after {
+    margin-bottom: 7px;
+    inset: 0;
+    position: absolute;
+    content: 'Click to open in new tab';
+    opacity: 0;
+  }
+
+  transition: background-color 5s opacity;
+
+  &:hover {
+    background-color: unset;
+    &::after {
+      background-color: rgba(0, 0, 0, 0.5);
+      opacity: 1;
+    }
+  }
 }
 
 h1 {
@@ -174,6 +200,8 @@ h1::before {
     width: 100%;
     max-height: 100%;
     border: 1px solid black;
+    margin: 0;
+    padding: 0;
   }
 
   .explanation {
