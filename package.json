@@ -13,7 +13,7 @@
   "dependencies": {
     "@lite-embed/vue": "^1.0.4",
     "vue": "^3.4.27",
-    "vue-router": "^4.1.6"
+    "vue-router": "^4.3.2"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.10.3",
