@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@lite-embed/vue": "^1.0.4",
-    "vue": "^3.4.27",
+    "vue": "^3.4.28",
     "vue-router": "^4.3.3"
   },
   "devDependencies": {
