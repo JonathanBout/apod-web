@@ -4,10 +4,20 @@ on:
   push:
     branches:
       - release
+    paths-ignore:
+      - '**.md'
 
+env:
+  BRANCH_NAME: ${{ github.head_ref || github.ref_name }} 
+      
+      
 jobs:
-  Publish:
-    runs-on: buildjet-4vcpu-ubuntu-2204-arm
+  run-tests:
+    name: Run Tests
+    uses: ./.github/workflows/node.js.yml
+  publish:
+    runs-on: buildjet-2vcpu-ubuntu-2204-arm
+    needs: [run-tests]
     permissions:
       contents: read
       packages: write
@@ -30,10 +40,18 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            latest
+            ${{ github.sha }}
+            ${{ env.BRANCH_NAME }}
+      # - name: Setup buildx
+      #   uses: docker/setup-buildx-action@v3
       - name: Build and push Docker image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: .
+          # cache-from: type=gha
+          # cache-to: type=gha,mode=min
           file: Dockerfile
           platforms: linux/arm64/v8
           push: true
