@@ -70,5 +70,10 @@ export class ApodResponse {
     if (!response.explanation.match(/\.;!\?/)) {
       response.explanation += '.'
     }
+
+    // remove trailing periods, but keep ellipses or cliffhangers
+    if (response.explanation.endsWith('..') && !response.explanation.endsWith('...')) {
+      response.explanation = response.explanation.slice(0, -1)
+    }
   }
 }
